@@ -1,0 +1,5 @@
+to see the content of the index git ls-files
+to see the git repo find .get/objects/ -type f
+git cat-file -t filename to see the type of a file
+	to see the size use -s
+	to see the content use -p

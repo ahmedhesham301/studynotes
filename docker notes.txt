@@ -1,0 +1,111 @@
+Container Management
+View all running containers:
+docker container ls
+
+Run a Docker container:
+docker container run <imagename>:<version>
+
+Options:
+
+-it : Allows interactive access to the container's terminal.
+-d : Runs the container in detached mode (background).
+-p <host_port>:<container_port> : Maps a host port to a container port.
+-v <host_full_path>:<container_full_path> : Mounts a folder into the container.
+-v <volume_name>:<container_full_path> : Mounts a Docker volume.
+Stop a running container:
+docker container stop <id_or_name>
+
+Delete a container:
+docker container rm <id_or_name>
+
+Image Management
+List installed Docker images:
+docker image ls
+
+Pull a Docker image:
+docker image pull <imagename>
+
+Create a Docker container without starting it:
+docker container create -it <imagename> bash
+
+File and Volume Operations
+Copy a file into a container:
+docker container cp <file> <id_or_name>:<path_inside_container>
+
+Create a Docker volume:
+docker volume create <name>
+
+Network Management
+Create a Docker network:
+docker network create --subnet <x.x.x.x/x> <network_name>
+
+Options:
+
+--internal : Makes the network internal (not accessible from the internet).
+Connect a network to a container:
+docker network connect <network_name> <container_name>
+
+Disconnect a network from a container:
+docker network disconnect <network_name> <container_name>
+
+Additional Commands
+Commit a container to an image:
+docker commit <container_name> <dockeraccountname>/<imagename>
+
+Build an image from a Dockerfile:
+docker build -t <imagename>:<tag> <location>
+
+Change an image name:
+docker tag <imagename>:<tag> <newname>:<newtag>
+
+Run a command in a running Docker container:
+docker exec <container_name> <command>
+_______________________________________________________________________________
+Run a command in a Docker Compose service:
+docker compose exec <service_name> <command>
+
+to see what services are running 
+docker compose ps
+
+to see what apps are running
+docker compose ls
+
+to start an app 
+docker compose up
+-& to make it run in the background
+
+to stop an app 
+docker compose down
+
+
+________________________________________________________________
+
+to initialize a docker swam
+docker swarm init --advertise-addr 192.168.1.10:2377 --listen-addr 192.168.1.10:2337
+
+to get the command to join a docker swarm
+docker swarm join-token worker/manger
+
+to see the nodes in the swarm
+docker node ls
+
+to run a service in a swarm
+docker service create <imageName>:version
+--name <name> to choice a name
+-p port:port to forward a port
+--replicas <number> how many nodes to run on
+
+to get details about the service
+docker service ps <serviceName>
+
+to scale a docker service 
+docker service <serviceName> scale <serviceName>=<numberOfContainers>
+
+to update a docker service 
+docker service update --image <imageName>:version <serviceName>
+--update-parallelism <number> to choice how many containers update at the same time
+--update-delay <time> to make the update wait before updating 
+
+___________________________________________________________________________________________
+to delploy a docker stack from docker-stack.yml
+docker stack deploy -c docker-stack.yml <name>

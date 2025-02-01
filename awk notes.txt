@@ -1,0 +1,34 @@
+Basic Syntax
+You can use awk in two ways:
+With a command pipeline:
+	command | awk 'awk_command'
+With a file:
+	awk 'awk_command' file
+
+Changing Field Separator
+	Use -F "separator" to change the field separator.
+		Example: awk -F ":" '{print $1}' file
+	Alternatively, define field separators inside awk:
+		Example: awk 'BEGIN {FS=":"} {print $1}' file
+
+Pattern Matching
+	/pattern/ is used to search for a pattern in a file.
+		^ matches the beginning of every line.
+		Use \ to escape special characters in patterns.
+
+Printing Specific Fields
+To output a specific column:
+	awk '{print $columnNumber}' file
+		Example: awk '{print $2}' file prints the second column.
+To output multiple columns:
+	awk '{print $column1, $column2, $column3}' file
+To separate columns with a custom separator:
+	awk '{print $1, "-", $2}' file
+
+To define separators explicitly:
+	awk 'BEGIN {FS=":"; OFS="-"} {print $1, $2, $3}' file
+
+Printing the Last Field
+	To print the last field in a line, use $NF:
+		awk '{print $NF}' file
+to get the length of a line use the length($column_number)

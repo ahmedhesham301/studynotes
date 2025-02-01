@@ -1,0 +1,73 @@
+To declare a variable, assign a value using the syntax:
+variableName=value
+
+To read input from the terminal, use the read command:
+read variableName
+-p "text" to make it wait for the user to press enter
+-r 
+
+To access command-line arguments, assign an argument to a variable using its position:
+variableName=$argumentNumber
+For example, $1 refers to the first argument, $2 to the second, and so on.
+
+To capture the output of a command and store it in a variable, use the following syntax:
+variableName=$(command)
+
+To print text to the terminal, use the echo command:
+echo "something"
+To include a variable in the printed text, reference it with a $ symbol:
+echo "The value is $variableName"
+
+To add a waiting period, use the sleep command followed by the number of seconds:
+sleep <number_of_seconds>
+
+To generate a random number, use the built-in variable $RANDOM:
+randomNumber=$RANDOM
+
+To add an environment variable, append the following line to the .bashrc file:
+export variableName=value
+Afterward, reload the .bashrc file with source ~/.bashrc or restart the terminal.
+
+to do math in bash
+$((themath))
+	
+if statement (spaces matter in if statements)
+if [[ $variable == $value ]]; then
+    command
+elif [[ $variable == $value ]]; then
+    command
+else
+    command
+fi
+-|| is or
+-&& is and
+
+to add a comment in bash script
+#comment
+
+while loop
+while [[ $vairable -condition value ]]; do
+    command
+done
+
+until loop will run until something is true
+until [[$variable == value]]; do
+    command
+done
+
+for loop
+for item in list; do
+    command
+done
+to create a range {start..end}
+
+to read lines from a text file
+for x in $(cat file.txt); do
+  command
+done
+
+to break from a loop use
+break
+
+to skip a value in a loop use 
+continue

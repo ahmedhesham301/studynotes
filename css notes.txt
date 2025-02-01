@@ -1,0 +1,2 @@
+em is 100% of parent
+rem is 100% of root(html tag)
