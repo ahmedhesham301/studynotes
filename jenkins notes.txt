@@ -1,0 +1,22 @@
+to write a shell command in jenkins scirpt
+sh 'command'
+
+to run something at theend of the pipeline
+use
+post{
+    success{}   //runs only when build success
+    always{}    //always runs what in it wether build fails or succeeds
+}
+
+to clear the work directory
+cleanWs()
+
+to save artifacts
+archiveArtifacts artifacts: 'path'
+
+to add enviroment variables add the next block to the pipeline
+environment{
+    variableName = value
+}
+to use the variable use a $ before it's name(ahh bash)
+
