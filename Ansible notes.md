@@ -13,7 +13,7 @@ all:
     groupname:
       hosts:
         web01:  
-	    web02:
+	web02:
 
 ```
 
