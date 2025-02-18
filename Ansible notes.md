@@ -14,7 +14,6 @@ all:
       hosts:
         web01:  
 	web02:
-
 ```
 
 To create a group of groups, nest another `children:` section within it.
