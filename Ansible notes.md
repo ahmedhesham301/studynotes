@@ -1,7 +1,7 @@
 # inventory file
 [How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html)
 Ansible inventory file structure
-```
+```yaml
 all:
   hosts:
     web01:
@@ -25,20 +25,20 @@ To add variables in a group level add `vars:`
 [Introduction to ad hoc commands](https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html))
  To run as sudo add `--become` at the end of the command
 ## To ping
-```
+```bash
 ansible <target/group/all> -m ping -i inventory.yaml
 ``` 
 ## To install a package
-```
+```bash
 ansible <target> -m yum -a "name=<packageName> state=present" -i inventory.yaml
 ```
 ## to start a service and enable it
-```
+```bash
 ansible <target> -m service -a "name=<service name> state=started enabled=yes" -i inventory.yaml
 ```
 
 ## To copy a file
-```
+```bash
 ansible <target> -m copy -a "src=<sourcePath> dest=<distPath>" -i inventory.yaml
 ```
 ---
@@ -47,13 +47,13 @@ ansible <target> -m copy -a "src=<sourcePath> dest=<distPath>" -i inventory.yaml
 [Index of all Modules](https://docs.ansible.com/ansible/latest/collections/index_module.html)
 
 to run a play book use
-```
+```bash
 ansible-playbook -i inventory.yaml playbook.yaml
 ```
 to debug add `-v`,`-vv`,`-vvv` the more the Vs the more the details
 to dry run(tests the play book) add -C at the end
 ## playbook structure
-```
+```yaml
 ---
 
 - name: A name for the play
