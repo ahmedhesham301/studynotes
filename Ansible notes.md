@@ -1,5 +1,5 @@
 # inventory file
-[How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html)
+[How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html)  
 Ansible inventory file structure
 ```yaml
 all:
@@ -12,7 +12,7 @@ all:
   children:
     groupname:
       hosts:
-        web01:
+        web01:  
 	    web02:
 
 ```
