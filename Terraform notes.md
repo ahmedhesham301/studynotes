@@ -100,3 +100,32 @@ In declaring add the line
 sensitive = true
 ```
 make a `secret.tfvars` file and set there values in it.(don't forget to use `-var-file`).
+# Plan
+> **Warning**
+> Terraform plan files can contain sensitive data. **Never** commit a plan file to version control, whether as a binary or in JSON format.
+
+### To output a plan to a file:
+```bash
+terraform plan -out "tfplan"
+```
+use -destroy to get a destroy plan.
+### To read a plan from a file:
+```bash
+terraform show "tfplan"
+```
+### To apply a plan from a file use:
+```bash
+terraform apply "tfplan"
+```
+> **Note**
+> When you apply a saved plan file, Terraform will not prompt you for approval and instead immediately execute the changes. This workflow is primarily used in automation.
+### Convert the saved plan into JSON:
+```bash
+terraform show -json "tfplan" | jq > tfplan.json
+```
+# Apply
+### Replace Resources
+```bash
+terraform apply -replace "resource address"
+```
+> The `-replace` argument requires a resource address. List the resources in your configuration with `terraform state list`.
