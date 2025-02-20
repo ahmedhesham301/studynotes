@@ -11,7 +11,8 @@
 		{"id":"40dc70829b632c24","type":"text","text":"argocd","x":790,"y":-340,"width":250,"height":60},
 		{"id":"4d781ce285c35594","type":"text","text":"Terraform","x":-240,"y":-340,"width":250,"height":60},
 		{"id":"d34653a5a98586f5","type":"text","text":"more aws","x":150,"y":-160,"width":250,"height":60},
-		{"id":"2553188cc2b70d99","x":790,"y":110,"width":250,"height":60,"type":"text","text":"hashicorp packer"}
+		{"id":"2553188cc2b70d99","type":"text","text":"hashicorp packer","x":790,"y":110,"width":250,"height":60},
+		{"id":"9efe7fbece9f6a27","type":"text","text":"hashicorp vault","x":790,"y":0,"width":250,"height":60}
 	],
 	"edges":[
 		{"id":"685001eb8a5344f6","fromNode":"5f2cf4b3ec0edee1","fromSide":"right","toNode":"4d781ce285c35594","toSide":"left"},

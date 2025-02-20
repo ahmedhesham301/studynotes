@@ -69,7 +69,7 @@ resource "random_pet" "name" {}
 # variables 
 It is recommended to add variables to `variables.tf`.
 If you want to add a variable to a string use `${var.variableName}`
-### TO declare a variable:
+### To declare a variable:
 ```hcl
 variable "variable_name" {
   description = "Description of the variable"
@@ -94,3 +94,9 @@ terraform apply -var <variableName>=<value>
 make a file called `terraform.tfvars` or `*.auto.tfvars`. You can also use the `-var-file` flag to specify other files by name in command line then add the value of the variables in it.
 ### Environment Variables
 Terraform searches the environment of its own process for environment variables named `TF_VAR_` followed by the name of a declared variable.
+### Secret Variables
+In declaring add the line
+```hcl
+sensitive = true
+```
+make a `secret.tfvars` file and set there values in it.(don't forget to use `-var-file`).
