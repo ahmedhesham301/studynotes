@@ -1,5 +1,3 @@
-
-
 # Terraform Provider Configuration
 ```hcl
 terraform {
@@ -129,3 +127,22 @@ terraform show -json "tfplan" | jq > tfplan.json
 terraform apply -replace "resource address"
 ```
 > The `-replace` argument requires a resource address. List the resources in your configuration with `terraform state list`.
+
+# Output
+> You can add output declarations anywhere in your Terraform configuration files. However, it is recommend defining them in a separate file called `outputs.tf`
+### Output structure
+```hcl
+output "name" {
+  description = "description"   #optional
+  value       = value
+  sensitive   = true            #optional
+}
+```
+you can use `${}` to put a variable in an output string.
+### Get output in terminal
+```bash
+terraform output
+```
+add output name at the end to get the value of that output only.
+to get a string output without the quotes use -raw
+use -json to get output as json

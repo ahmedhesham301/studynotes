@@ -9,7 +9,6 @@ post{
     success{}   //runs only when build success
 	failure{}   //always runs what int it when the buidl fails
 }
-
 ```
 
 to clear the work directory
@@ -18,13 +17,6 @@ to clear the work directory
 to save artifacts  
 `archiveArtifacts artifacts: 'path'`
 
-to add environment variables add the next block to the pipeline  
-```groovy
-environment{
-    variableName = value
-}
-```
-to use the variable use a `$` before it's name(ahh bash)  
 
 to use a docker image put this block in the stage where it is needed  
 ```groovy
@@ -77,5 +69,43 @@ to login to docker hub
 ```groovy
 docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
 	customimage.push("1.0") //pushes an image in a variable called customimage
+}
+```
+
+---
+# Environment variables
+to add environment **to all stages** variables add the next block to the pipeline to make it available to all stages or to the stage to make it available to only that stage 
+```groovy
+environment{
+    variableName = value
+}
+```
+to use the variable use a `$` before it's name(ahh bash)  
+
+## To add environment variables during run
+include a `script {}` block inside the `steps {}` section and define the variable as follows:
+```groovy
+steps {
+    script {
+        env.VAR_NAME = "<value>"
+    }
+}
+```
+### To pass output from command to an env variable
+```groovy
+env.VAR_NAME = sh(script: 'date', returnStdout: true)
+```
+### Usage Example:
+> When referencing the variable in the `steps{}` block, always use double quotes (`"`) instead of single quotes (`'`)
+```groovy
+steps {
+	echo "$env.VAR_NAME"
+	# or
+	echo "${env.VAR_NAME}"
+}
+```
+```groovy
+environment{
+	VAR = "$env.VAR_NAME"
 }
 ```
