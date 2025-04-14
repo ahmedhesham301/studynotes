@@ -80,7 +80,7 @@ docker compose down
 
 ________________________________________________________________
 
-to initialize a docker swam
+to initialize a docker swarm
 docker swarm init --advertise-addr 192.168.1.10:2377 --listen-addr 192.168.1.10:2337
 
 to get the command to join a docker swarm
