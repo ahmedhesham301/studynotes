@@ -8,13 +8,14 @@
 		{"id":"d34653a5a98586f5","type":"text","text":"more aws","x":220,"y":110,"width":250,"height":60},
 		{"id":"17efc34fe074bfef","type":"text","text":"ansible","x":-415,"y":-100,"width":250,"height":60,"color":"4"},
 		{"id":"5f2cf4b3ec0edee1","type":"text","text":"more aws","x":-100,"y":-100,"width":250,"height":60,"color":"4"},
-		{"id":"6d8befa1890bed0b","type":"text","text":"k8s","x":220,"y":-100,"width":250,"height":60},
+		{"id":"6d8befa1890bed0b","type":"text","text":"k8s","x":220,"y":-100,"width":250,"height":60,"color":"3"},
 		{"id":"4d781ce285c35594","type":"text","text":"more aws","x":540,"y":-100,"width":250,"height":60},
 		{"id":"bc4ee2cdba0325ac","type":"text","text":"Terraform","x":840,"y":-100,"width":250,"height":60},
 		{"id":"9efe7fbece9f6a27","type":"text","text":"hashicorp vault","x":1180,"y":-480,"width":250,"height":60},
 		{"id":"5e19e4e0f7cda135","type":"text","text":"helm","x":900,"y":-480,"width":250,"height":60},
 		{"id":"40dc70829b632c24","type":"text","text":"argocd","x":900,"y":-400,"width":250,"height":60},
-		{"id":"2553188cc2b70d99","type":"text","text":"hashicorp packer","x":1180,"y":-400,"width":250,"height":60}
+		{"id":"2553188cc2b70d99","type":"text","text":"hashicorp packer","x":1180,"y":-400,"width":250,"height":60},
+		{"id":"950febb5ce7feefc","type":"text","text":"loki","x":900,"y":-320,"width":250,"height":60}
 	],
 	"edges":[
 		{"id":"d506bafa034697d8","fromNode":"cf5deb65cca6d205","fromSide":"right","toNode":"17efc34fe074bfef","toSide":"left"},
