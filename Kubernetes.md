@@ -67,7 +67,7 @@ kubectl expose <resource-type>/<resource-name>
 - `--port <port-number>`: Specifies the port to expose.(on the service)
 - `--name <name>`: Assigns a DNS-compliant name to the created service.
 - `--type <type>`: Defines the type of service (e.g., `ClusterIP`, `NodePort`, `LoadBalancer`, `ExternalName`).
-- `--target-port`: This is the **port on the pod** that the traffic is forwarded to.
+- `--target-port`: This is the **port on the pod** that the traffic is forwarded to.(optional)
 ## Port forwarding
 ```bash
 kubectl port-forward <resource-type>/<resource-name> <local-port>:<resource-port>
