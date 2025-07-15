@@ -98,6 +98,22 @@ In declaring add the line
 sensitive = true
 ```
 make a `secret.tfvars` file and set there values in it.(don't forget to use `-var-file`).
+## Variable validation
+>You can specify custom validation rules for a particular variable by adding a `validation` block within the corresponding `variable` block.
+
+example
+```hcl
+variable "image_id" {
+  type        = string
+  description = "The id of the machine image (AMI) to use for the server."
+
+  validation {
+    condition     = length(var.image_id) > 4 && substr(var.image_id, 0, 4) == "ami-"
+    error_message = "The image_id value must be a valid AMI id, starting with \"ami-\"."
+  }
+}
+
+```
 # Plan
 > **Warning**
 > Terraform plan files can contain sensitive data. **Never** commit a plan file to version control, whether as a binary or in JSON format.
@@ -146,3 +162,42 @@ terraform output
 add output name at the end to get the value of that output only.
 to get a string output without the quotes use -raw
 use -json to get output as json
+# Viewing Terraform Resource Information
+## All resources
+You can view a human-readable summary of all resources from the state or plan file using:
+```bash
+terraform show
+```
+To get the output in JSON format run:
+```bash
+terraform show -json | jq
+```
+## specific resource
+List all resource addresses:
+```bash
+terraform state list
+```
+Display details of a specific resource:
+```bassh
+terraform state show [resource_address]
+```
+
+# Using `local-exec` Provisioner
+>The `local-exec` provisioner allows you to **run commands on your local machine** after a resource is created or destroyed.
+
+Add a `provisioner` block inside your resource:
+```hcl
+provisioner "local-exec" {
+    command = "echo Instance ${self.id} created > output.txt"
+  }
+```
+# Handling Moved(Renamed) Resources
+>When a resource is renamed or moved to another module, Terraform will try to destroy the old one and create a new one — unless you **inform it** about the move.
+
+Avoid destroying and recreating resources by using the `moved` block:
+```hcl
+moved {
+    from = aws_instance.old_name
+    to   = aws_instance.new_name
+  }
+```
