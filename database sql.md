@@ -115,11 +115,36 @@ WHERE salary > 50000;
   - `LIKE '%son'` → ends with "son"
   - `ILIKE` → case-insensitive pattern match
 
+### Selecting distinct records
+
+```sql
+SELECT DISTINCT department
+FROM employees;
+```
+
+```sql
+SELECT COUNT(DISTINCT department)
+FROM employees;
+```
+
 ### Aliases (AS)
 
 ```sql
 SELECT first_name AS fname, last_name AS lname
 FROM employees AS e;
+```
+
+### Conditional Expressions (`CASE`)
+
+```sql
+SELECT first_name,
+       department,
+       CASE department
+           WHEN 'HR' THEN 'Human Resources'
+           WHEN 'IT' THEN 'Tech Department'
+           ELSE 'Other'
+       END AS department_name
+FROM employees;
 ```
 
 ### Aggregation Functions
@@ -134,13 +159,15 @@ FROM employees AS e;
 
 ### String Operations & Functions
 
-| OP/Function | Description                           |
-| ----------- | ------------------------------------- |
-| \|\|        | Join two strings                      |
-| `CONCAT()`  | Join two strings                      |
-| `LOWER()`   | Gives a lower case string             |
-| `UPPER()`   | Giver a upper case string             |
-| `LENGTH()`  | Gives the number of chars in a string |
+| OP/Function  | Description                                                       |
+| ------------ | ----------------------------------------------------------------- |
+| \|\|         | Join two strings                                                  |
+| `CONCAT()`   | Join two strings                                                  |
+| `LOWER()`    | Gives a lower case string                                         |
+| `UPPER()`    | Giver a upper case string                                         |
+| `LENGTH()`   | Gives the number of chars in a string                             |
+| `GREATEST()` | Returns the **largest** value from the given list of expressions. |
+| `LEAST()`    | Returns the **smallest** value from the given list.               |
 
 ## Sorting Results (`ORDER BY`)
 
@@ -190,6 +217,8 @@ INNER JOIN customers
 ON orders.customer_id = customers.id;
 ```
 
+> `WHERE` statement must come after the join
+>
 #### LEFT/RIGHT JOIN (or LEFT/RIGHT OUTER JOIN)
 
 - Returns **all rows** from the left/right table, and matching rows from the right/left table.
@@ -306,4 +335,81 @@ SELECT column1, column2 FROM table2;
 SELECT column1, column2 FROM table1
 EXCEPT
 SELECT column1, column2 FROM table2;
+```
+
+## `ALL`,`ANY` ,`SOME`
+
+### `ALL`
+
+The expression must be greater than *every* value in the list or subquery.
+
+```sql
+SELECT *
+FROM products
+WHERE price > ALL (SELECT price FROM discounted_products);
+```
+
+### `ANY`, `SOME`
+
+The expression must be true for *at least one* value in the list or subquery.
+
+```sql
+SELECT *
+FROM orders
+WHERE quantity > ANY (SELECT quantity FROM bulk_orders);
+```
+
+# Altering tables
+
+is used to modify the structure of an existing table without dropping it.
+
+```sql
+ALTER TABLE table_name
+action [, ...];
+```
+
+## Common Actions
+
+| Action                 | Syntax Example                                                                                  | Notes                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Rename Table**       | `ALTER TABLE old_name RENAME TO new_name;`                                                      | Changes the table name.                                            |
+| **Add Column**         | `ALTER TABLE users ADD COLUMN age INT;`                                                         | Adds a new column. Fast unless `NOT NULL` without default is used. |
+| **Drop Column**        | `ALTER TABLE users DROP COLUMN age CASCADE;`                                                    | Removes a column. `CASCADE` drops dependencies.                    |
+| **Rename Column**      | `ALTER TABLE users RENAME COLUMN age TO user_age;`                                              | Renames an existing column.                                        |
+| **Change Column Type** | `ALTER TABLE users ALTER COLUMN age TYPE BIGINT USING age::BIGINT;`                             | Converts values with `USING` if needed.                            |
+| **Set Default**        | `ALTER TABLE users ALTER COLUMN age SET DEFAULT 18;`                                            | Assigns a default value for new rows.                              |
+| **Drop Default**       | `ALTER TABLE users ALTER COLUMN age DROP DEFAULT;`                                              | Removes default value.                                             |
+| **Set NOT NULL**       | `ALTER TABLE users ALTER COLUMN age SET NOT NULL;`                                              | Requires all rows to have a value.                                 |
+| **Drop NOT NULL**      | `ALTER TABLE users ALTER COLUMN age DROP NOT NULL;`                                             | Allows `NULL` values.                                              |
+| **Add Constraint**     | `ALTER TABLE orders ADD CONSTRAINT fk_customer FOREIGN KEY (cust_id) REFERENCES customers(id);` | Adds PK, FK, UNIQUE, CHECK, etc.                                   |
+| **Drop Constraint**    | `ALTER TABLE orders DROP CONSTRAINT fk_customer CASCADE;`                                       | Removes a named constraint.                                        |
+| **Rename Constraint**  | `ALTER TABLE orders RENAME CONSTRAINT fk_customer TO fk_client;`                                | Renames an existing constraint.                                    |
+| **Change Owner**       | `ALTER TABLE users OWNER TO new_owner;`                                                         | Transfers ownership.                                               |
+| **Move to Schema**     | `ALTER TABLE users SET SCHEMA archive;`                                                         | Moves table to another schema.                                     |
+
+# Modify existing rows `UPDATE`
+
+## update all rows
+
+```sql
+UPDATE employees
+SET salary = salary * 1.05;
+```
+
+## Update with condition
+
+```sql
+UPDATE employees
+SET salary = salary + 1000,
+ status = 'active'
+WHERE department = 'IT';
+```
+
+## Update using another table (`FROM`)
+
+```sql
+UPDATE employees e
+SET department = d.dept_name
+FROM departments d
+WHERE e.dept_id = d.id;
 ```
