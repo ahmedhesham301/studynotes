@@ -413,3 +413,87 @@ SET department = d.dept_name
 FROM departments d
 WHERE e.dept_id = d.id;
 ```
+
+# PostgreSQL Internal
+## Commands
+### see where PostgreSQL stores its **database files**.
+ ```sql
+ SHOW data_directory
+ ```
+
+### Lists all databases in the current PostgreSQL cluster with their **object IDs (OIDs)**.
+```sql
+SELECT oid, datname
+FROM pg_database;
+```
+
+### list metadata about all relations
+```sql
+SELECT * FROM pg_class;
+```
+
+### get table,index,TOAST Size
+```sql
+SELECT pg_size_pretty(pg_relation_size('name'));
+```
+
+### lists **all indexes** (including auto generated ones)
+```sql
+SELECT relname,relkind
+FROM pg_class
+WHERE relkind = 'i';
+```
+## concepts
+### Storage Concepts
+
+#### Heap File
+- The **heap file** is how PostgreSQL physically stores **table data** on disk.
+- Each table has its own heap file.
+- Stored as a collection of **(blocks)**.
+- A heap file is divided into many **blocks**.
+
+#### Block (Page)
+- A **block** (also called a **page**) is the smallest unit of storage I/O in PostgreSQL.
+- Default size: **8 KB**
+- Each block contains multiple **tuples** (rows).
+- Layout inside a page:
+    1. **Page header**
+    2. **Item pointer array (line pointers)**
+    3. **Tuples (actual row data)**
+
+#### Tuple (Item)
+- A **tuple** represents a single **row** in a PostgreSQL table.
+- Contains:
+    - Row data (column values)
+    - Tuple header (metadata)
+    - Transaction IDs for MVCC (visibility info)
+- Tuples can have multiple versions if updated (for concurrency control).
+
+---
+### Query Execution Concepts
+#### Full Table Scan
+- PostgreSQL reads **every row** in a table **from disk into memory** to find matching data.
+- Each block of the table is read sequentially from the **heap file**.
+- Occurs when:
+    - No index exists on the filtered column.
+    - The query needs most rows (low selectivity).
+    - The planner estimates it’s cheaper than using an index.
+
+#### Index
+- An **index** is a separate **data structure** that helps PostgreSQL locate rows **without scanning all data**.
+- When using an index scan:
+    1. PostgreSQL looks up matching **row pointers** in the index.        
+    2. Then it fetches only those specific **heap pages** from **disk into memory**.
+- This avoids reading unnecessary blocks.
+- Index is automatically generated for primary keys and objects with the `UNIQUE` constraint but are not listed under indexes in PGAdmin.
+
+##### creating an index
+```sql
+CREATE INDEX ON employees(department);
+```
+> can but custom name after INDEX
+
+	##### dropping an index
+```sql
+	DROP INDEX <name>;
+```
