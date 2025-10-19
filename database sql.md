@@ -336,7 +336,23 @@ SELECT column1, column2 FROM table1
 EXCEPT
 SELECT column1, column2 FROM table2;
 ```
+## Common Table Expressions (CTEs) — `WITH ... AS ()`
 
+A **CTE (Common Table Expression)** lets you define **temporary result sets** that exist only for the duration of a query.  
+They make complex SQL queries easier to read and maintain.
+
+```sql
+WITH tags AS(
+	SELECT user_id, created_at FROM caption_tags
+    UNION ALL
+    SELECT user_id, created_at FROM photo_tags
+)
+
+SELECT username, tags.created_at
+FROM users
+JOIN tags ON tags.user_id = users.id
+WHERE tags.created_at < '2010-01-07';
+```
 ## `ALL`,`ANY` ,`SOME`
 
 ### `ALL`
@@ -358,6 +374,68 @@ SELECT *
 FROM orders
 WHERE quantity > ANY (SELECT quantity FROM bulk_orders);
 ```
+
+# Views (Fake tables)
+- A **view** is a **virtual table** based on the result of a **SQL query**.
+- It **does not store data physically**.
+
+## Creating a view
+```sql
+CREATE VIEW view_name AS(
+	SELECT column1, column2
+	FROM table_name
+	WHERE condition;
+)
+
+```
+Example:
+```sql
+CREATE VIEW tags AS(
+	SELECT id,created_at,user_id,post_id, 'photo_tag' AS type FROM photo_tags
+	UNION ALL
+	SELECT id,created_at,user_id,post_id, 'caption_tag' AS type FROM caption_tags
+)
+```
+
+## Updating a view
+```sql
+CREATE OR REPLACE VIEW view_name AS(
+	SELECT * FROM my_table
+	WITH CHECK OPTION;
+)
+```
+Example:
+```sql
+CREATE OR REPLACE VIEW recent_posts AS (
+  SELECT *
+  FROM posts
+  ORDER BY created_at DESC
+  LIMIT 15
+);
+```
+
+## Dropping a view
+```sql
+DROP VIEW view_name;
+```
+
+# Materialized view
+- A **Materialized View** is a **cached, physical copy of the result** of a query.  
+- Unlike a regular view (which is just a stored SQL query), a materialized view stores data on disk and can be refreshed later.
+## Creating a materialized view
+```sql
+CREATE MATERIALIZED VIEW view_name AS(
+	SELECT ...
+	FROM ...
+)
+WITH DATA;
+```
+
+## Refreshing a Materialized View
+```sql
+REFRESH MATERIALIZED VIEW view_name;
+```
+
 
 # Altering tables
 
@@ -395,13 +473,13 @@ action [, ...];
 UPDATE employees
 SET salary = salary * 1.05;
 ```
-
+	
 ## Update with condition
 
 ```sql
 UPDATE employees
 SET salary = salary + 1000,
- status = 'active'
+	status = 'active'
 WHERE department = 'IT';
 ```
 
@@ -414,6 +492,23 @@ FROM departments d
 WHERE e.dept_id = d.id;
 ```
 
+# Transactions
+A **transaction** is a sequence of one or more SQL statements executed as a single unit of work.
+- The **main goal** is to ensure **data integrity and consistency**, even in the event of errors or system failures.
+- A transaction **must be completed entirely** or **not executed at all** — this is known as the **“all-or-nothing”** property.
+
+## Start a transaction
+```postgresql
+BEGIN;
+```
+## **Commit a transaction** (save all changes)
+```postgresql
+COMMIT;
+```
+## **Rollback a transaction** (undo all changes)
+```postgresql
+ROLLBACK;
+```
 # PostgreSQL Internal
 ## Commands
 ### see where PostgreSQL stores its **database files**.
@@ -442,6 +537,13 @@ SELECT pg_size_pretty(pg_relation_size('name'));
 SELECT relname,relkind
 FROM pg_class
 WHERE relkind = 'i';
+```
+
+### View Table Statistics
+```sql
+SELECT *
+FROM pg_stats
+WHERE tablename = 'users';
 ```
 ## concepts
 ### Storage Concepts
@@ -493,7 +595,39 @@ CREATE INDEX ON employees(department);
 ```
 > can but custom name after INDEX
 
-	##### dropping an index
+##### dropping an index
 ```sql
 	DROP INDEX <name>;
+```
+
+#### `EXPLAIN`
+The `EXPLAIN` command shows **how PostgreSQL plans to execute a query** — it does **not actually run** the query.
+```sql
+EXPLAIN SELECT * FROM users WHERE username = 'ahmed';
+```
+##### `EXPLAIN ANALYZE`
+Executes the query **for real** and displays both:
+- The **planner’s estimates** (what PostgreSQL _expected_).
+- The **actual runtime statistics** (what _really happened_).
+```sql
+EXPLAIN ANALYZE SELECT * FROM users WHERE username = 'ahmed';
+```
+### Inspecting Index & Page Internals
+#### Enable Page Inspection
+```sql
+CREATE EXTENSION pageinspect;
+```
+- Enables the `pageinspect` extension, which lets you **inspect internal PostgreSQL storage pages**.
+- Must be created once per database (superuser privilege required).
+- Useful for analyzing **how PostgreSQL physically stores data and index entries** on disk.
+
+### View B-Tree Index Metadata
+```sql
+SELECT * FROM bt_metap('users_username_idx');
+```
+- Displays metadata about a **B-Tree index**.
+
+### Inspect Specific Index Pages
+```sql
+SELECT * FROM bt_page_items('users_username_idx', 3);
 ```
