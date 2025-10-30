@@ -68,6 +68,8 @@
 | proxy_next_upstream_timeout | Limits the time during which a request can be passed to the next server. The 0 value turns off this limitation. Default 0                                                                                                                                                      |
 | Keepalive_timeout           | Sets a timeout during which an idle keepalive connection to an upstream server will stay open.                                                                                                                                                                                 |
 
+### Websockets
+
 ## Architecture
 ### Single Threaded Architecture
 - The **simplest model** — one thread handles everything:
@@ -161,5 +163,42 @@ events {
 
 ## Using Nginx as a layer 4 proxy
 ```nginx
+# The 'stream' context is used for Layer 4 (Transport layer) traffic.
+# It handles raw TCP or UDP connections — not HTTP.
+# Useful for databases, VPNs, SSH, or any non-HTTP protocol.
+stream {
+	# ===== Upstream group =====
+    # Defines a pool of backend servers that
+    # Nginx will load balance TCP/UDP traffic to.
+    # No knowledge of HTTP, headers, or URLs here — just IPs and ports.
+	upstream allabckend {
+		server nodeapp1:9999;
+		server nodeapp2:9999;
+		server nodeapp3:9999;
+		server nodeapp4:9999;
+	}
+	  # ===== Server block =====
+    # Represents a listening TCP/UDP endpoint that clients connect to.
+    # Nginx receives the connection and forwards it 
+	# to one of the upstream servers.
+	server {
+		listen 80;
+		# Forward all incoming connections to the 'allabckend' upstream group.
+        # No HTTP inspection — packets are just relayed.
+		proxy_pass allabckend;
+	}
+}
 
+events {
+
+}
+```
+
+## Enable TLS 1.3 and http2
+add the following block to the server block
+```nginx
+listen 443 ssl http2;
+ssl_certificate /etc/letsencrypt/live/sus.servemp3.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/sus.servemp3.com/privkey.pem;
+ssl_protocols TLSv1.3;     # to force TLS 1.3 and http 2
 ```
